@@ -6,56 +6,67 @@ import pandas as pd
 from hazm import Normalizer, Stemmer, word_tokenize
 
 
-def preprocess_df(df: pd.DataFrame) -> pd.DataFrame:
-    tokenize(df)
-    normalize(df)
-    remove_stopwords(df)
-    stem(df)
+class Preprocessor:
+    df: pd.DataFrame = None
+    stopwords: List[str] = None
 
-    return df
+    def __init__(self, df):
+        if self.df is None:
+            self.df = df
+        self.set_stopwords()
+        self.stemmer = Stemmer()
+        self.normalizer = Normalizer()
 
+    def set_stopwords(self):
+        if self.stopwords is not None:
+            return self.stopwords
 
-def tokenize(df: pd.DataFrame):
-    df['tokens'] = df['content'].apply(lambda text: word_tokenize(text))
-    return df
+        num_stopwords = 30
+        counts = self.count_words()
 
+        common_words_counts = counts.most_common(num_stopwords)
+        logging.info(f'Most common words with their counts: {common_words_counts}')
 
-def normalize(df: pd.DataFrame):
-    normalizer = Normalizer()
-    df['content'] = df['content'].apply(lambda text: normalizer.normalize(text))
-    return df
+        stopwords = [word for word, count in common_words_counts]
+        self.stopwords = stopwords
 
+    def count_words(self):
+        counts = Counter()
 
-def count_words(df: pd.DataFrame):
-    counts = Counter()
+        for _, row in self.df.iterrows():
+            words = row['content'].split()
+            counts.update(token for token in words)
 
-    for _, row in df.iterrows():
-        tokens = row['tokens']
-        counts.update(token for token in tokens)
+        return counts
 
-    return counts
+    def preprocess_df(self):
+        self.normalize()
+        self.tokenize()
+        self.remove_stopwords_from_df()
+        self.stem()
 
+    def tokenize(self):
+        self.df['tokens'] = self.df['content'].apply(lambda text: word_tokenize(text))
+        return self.df
 
-def remove_stopwords(df: pd.DataFrame):
-    num_stopwords = 30
-    counts = count_words(df)
+    def normalize(self):
+        self.df['content'] = self.df['content'].apply(lambda text: self.normalize_text(text))
+        return self.df
 
-    common_words_counts = counts.most_common(num_stopwords)
-    stopwords = [word for word, count in common_words_counts]
-    logging.info(f'Most common words with their counts: {common_words_counts}')
-    df['tokens'] = df['tokens'].apply(lambda tokens: remove_stopword(tokens, stopwords))
+    def normalize_text(self, text):
+        normalized_text = self.normalizer.normalize(text)
+        return normalized_text
 
+    def remove_stopwords_from_df(self):
+        self.df['tokens'] = self.df['tokens'].apply(lambda tokens: self.remove_stopwords(tokens))
 
-def remove_stopword(tokens: List[str], stopwords: List[str]):
-    filtered_tokens = [token for token in tokens if token not in stopwords]
-    return filtered_tokens
+    def stem(self):
+        self.df['tokens'] = self.df['tokens'].apply(lambda tokens: self.stem_tokens(tokens))
 
+    def stem_tokens(self, tokens: List[str]):
+        stemmed_tokens = [self.stemmer.stem(token) for token in tokens]
+        return stemmed_tokens
 
-def stem(df: pd.DataFrame):
-    stemmer = Stemmer()
-    df['tokens'] = df['tokens'].apply(lambda tokens: stem_tokens(tokens, stemmer))
-
-
-def stem_tokens(tokens: List[str], stemmer: Stemmer):
-    stemmed_tokens = [stemmer.stem(token) for token in tokens]
-    return stemmed_tokens
+    def remove_stopwords(self, tokens: List[str]):
+        filtered_tokens = [token for token in tokens if token not in self.stopwords]
+        return filtered_tokens

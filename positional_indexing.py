@@ -2,17 +2,17 @@ from typing import Dict
 
 import pandas as pd
 
-from models import PositionalIndex
+from models import TokenInfo
 
 
-def get_token_to_positional_indexes_dict(df: pd.DataFrame) -> Dict[str, PositionalIndex]:
-    token_to_pos_idx = {}
+def get_tokens_info_dict(df: pd.DataFrame) -> Dict[str, TokenInfo]:
+    tokens_info = {}
     for doc_id, row in df.iterrows():
         for idx, token in enumerate(row['tokens']):
-            if token not in token_to_pos_idx:
-                token_to_pos_idx.update({token: PositionalIndex()})
+            if token not in tokens_info:
+                tokens_info.update({token: TokenInfo()})
 
-            pos_idx = token_to_pos_idx[token]
-            pos_idx.update_indexes(doc_id, idx)
+            token_info = tokens_info[token]
+            token_info.update_indexes(doc_id, idx)
 
-    return token_to_pos_idx
+    return tokens_info
