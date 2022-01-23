@@ -1,34 +1,41 @@
-import logging
 from ast import literal_eval
-
+import pickle
+from positional_indexing import get_tokens_info_dict
 import pandas as pd
+
+import logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+DIRECTORY_PATH = './dataset/'
+PREPROCESSED_PATH = DIRECTORY_PATH + 'preprocessed/'
 
 
 def get_preprocessed_df(file_name):
-    preprocessed_file_path = f'./dataset/preprocessed/{file_name}'
+    preprocessed_file_path = PREPROCESSED_PATH + file_name
 
     try:
-        df = pd.read_excel(preprocessed_file_path, engine="openpyxl")
-        df['tokens'] = df['tokens'].apply(literal_eval)
+        df = pd.read_pickle(preprocessed_file_path)
     except FileNotFoundError:
         raise FileNotFoundError
 
     return df
 
 
-def get_df(file_name):
-    file_path = f'./dataset/{file_name}'
-    preprocessed_file_path = f'./dataset/preprocessed/{file_name}'
+def get_df(file_name, ):
+    file_path = DIRECTORY_PATH + file_name
+    preprocessed_file_path = PREPROCESSED_PATH + file_name
 
     is_preprocessed = False
     try:
-        df = get_preprocessed_df(file_name)
-        logging.info(f'Used preprocessed version found in {preprocessed_file_path}')
+        df = get_preprocessed_df("IR1_7k_news.pkl")
+        logger.info(f'Used preprocessed version found in {preprocessed_file_path}')
         is_preprocessed = True
         return df, is_preprocessed
 
     except FileNotFoundError:
-        logging.warning(
+        logger.warning(
             f'Preprocessed version of {file_name} could not be found in {preprocessed_file_path}\n'
             f'Using the raw version'
         )
@@ -36,12 +43,26 @@ def get_df(file_name):
             df = pd.read_excel(file_path, engine="openpyxl")
             return df, is_preprocessed
         except FileNotFoundError:
-            logging.error(
+            logger.error(
                 f'File {file_name} could not be found in {file_path}\n'
                 f'Are you sure you placed the file in the correct path?'
             )
             exit(0)
 
 
-def set_preprocessed_df(df, file_path):
-    df.to_excel(file_path, index=False)
+def get_tokens_info(file_name, df):
+    file_path = PREPROCESSED_PATH + file_name
+
+    try:
+        f = open(file_path, 'rb')
+        tokens_info = pickle.load(f)
+        logger.info(f"Positional Indexing loaded from {file_path}")
+    except FileNotFoundError:
+        logger.info(f"Positional Indexing cache wasn't found in {file_path}")
+        tokens_info = get_tokens_info_dict(df=df)
+        logger.info("Positional Indexing computed.")
+        with open(file_path, 'wb') as f:
+            pickle.dump(tokens_info, f)
+            logger.info(f"Positional Indexing save to path {file_path}.")
+
+    return tokens_info

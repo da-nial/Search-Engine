@@ -1,33 +1,11 @@
 from typing import List, Dict
 
-import pandas as pd
-from hazm import word_tokenize
+from models import Substring
 
-from models import TokenInfo, Substring
-from positional_indexing import get_tokens_info_dict
-from preprocessing import Preprocessor
+from base_query_processing import BaseQueryEngine
 
 
-class QueryEngine:
-    df: pd.DataFrame = None
-    tokens_info: Dict[str, TokenInfo] = None
-    preprocessor: Preprocessor = None
-
-    def __init__(self, df, preprocessor, query):
-        if self.df is None:
-            self.df = df
-            self.preprocessor = preprocessor
-            self.tokens_info = get_tokens_info_dict(df)
-
-        self.query_tokens = self._preprocess_query(query)
-
-    def _preprocess_query(self, query):
-        normalized_query = self.preprocessor.normalize_text(query)
-        tokens = word_tokenize(normalized_query)
-        tokens = self.preprocessor.remove_stopwords(tokens)
-        tokens = self.preprocessor.stem_tokens(tokens)
-        return tokens
-
+class IndexedQueryEngine(BaseQueryEngine):
     def process_query(self):
         if len(self.query_tokens) == 1:
             docs = self._process_single_token_query()

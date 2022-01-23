@@ -1,3 +1,6 @@
+from math import log10
+
+
 class TokenInfo:
     def __init__(
             self,
@@ -24,6 +27,23 @@ class TokenInfo:
 
     def get_indexes(self, doc_id):
         return self.doc_to_indexes.get(doc_id, [])
+
+    def get_frequency(self, doc_id: int):
+        return len(self.doc_to_indexes.get(doc_id, []))
+
+    def get_weight(self, doc_id: int, num_docs: int):
+        f = self.get_frequency(doc_id)
+        tf = log10(1 + f)
+        idf = log10(num_docs / self.num_docs_containing)
+
+        return tf * idf
+
+
+class TokenDocInfo:
+    def __init__(self):
+        self.indexes = []
+        self.frequency = 0
+        self.weight = None
 
 
 class Substring:

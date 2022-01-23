@@ -1,7 +1,6 @@
 import logging
 from collections import Counter
 from typing import List
-
 import pandas as pd
 from hazm import Normalizer, Stemmer, word_tokenize
 
