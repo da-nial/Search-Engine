@@ -19,11 +19,6 @@ class Doc:
 
 
 class WordEmbeddingQueryEngine(BaseQueryEngine):
-    initialized = False
-    df: pd.DataFrame = None
-    num_docs: int = None
-    tokens_info: Dict[str, TokenInfo] = None
-    preprocessor: Preprocessor = None
     w2v_model: Word2Vec = None
     docs: List[Doc]
 
