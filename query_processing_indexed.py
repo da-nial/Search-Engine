@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from models import Substring
 
-from base_query_processing import BaseQueryEngine
+from query_processing_base import BaseQueryEngine
 
 
 class IndexedQueryEngine(BaseQueryEngine):

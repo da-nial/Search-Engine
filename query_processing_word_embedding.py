@@ -6,7 +6,7 @@ from math import log10
 
 from utils import similarity
 
-from base_query_processing import BaseQueryEngine
+from query_processing_base import BaseQueryEngine
 
 
 class Doc:

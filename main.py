@@ -2,10 +2,10 @@ from io_handler import get_df, get_tokens_info, PREPROCESSED_PATH
 from preprocessing import Preprocessor
 from logging import getLogger
 
-from indexed_query_processing import IndexedQueryEngine
-from vectorized_query_processing import VectorizedQueryEngine
-from word_embedding_query_processing import WordEmbeddingQueryEngine
-from k_means_query_processing import KMeansEngineWordEmbedding
+from query_processing_indexed import IndexedQueryEngine
+from query_processing_vectorized import VectorizedQueryEngine
+from query_processing_word_embedding import WordEmbeddingQueryEngine
+from query_processing_k_means import KMeansEngineWordEmbedding
 
 logger = getLogger('main')
 

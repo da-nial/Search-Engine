@@ -5,7 +5,7 @@ from utils import l2_norm
 
 from models import TokenInfo
 
-from base_query_processing import BaseQueryEngine
+from query_processing_base import BaseQueryEngine
 
 
 class VectorizedQueryEngine(BaseQueryEngine):

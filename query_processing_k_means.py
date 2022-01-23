@@ -1,4 +1,4 @@
-from word_embedding_query_processing import WordEmbeddingQueryEngine, Doc
+from query_processing_word_embedding import WordEmbeddingQueryEngine, Doc
 from utils import l2_norm, mean, similarity
 from random import sample
 from typing import List, Tuple, Union

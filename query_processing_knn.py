@@ -1,7 +1,7 @@
 from heapq import heapify, heappush, heappushpop, nlargest
 
-from word_embedding_query_processing import Doc
-from k_means_query_processing import KMeansEngineWordEmbedding
+from query_processing_word_embedding import Doc
+from query_processing_k_means import KMeansEngineWordEmbedding
 from utils import similarity
 from typing import List
 
