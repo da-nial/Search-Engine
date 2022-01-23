@@ -1,11 +1,8 @@
 import multiprocessing
 from gensim.models import Word2Vec
-from typing import List, Dict, Tuple, Union
+from typing import List, Tuple
 from positional_indexing import TokenInfo
-from preprocessing import Preprocessor
-import pandas as pd
 from math import log10
-from hazm import word_tokenize
 
 from utils import similarity
 
