@@ -3,6 +3,8 @@ from utils import l2_norm, mean, similarity
 from random import sample
 from typing import List, Tuple, Union
 
+import pickle
+
 
 class Cluster:
     def __init__(self, id, centroid, docs: List[Doc] = None):
@@ -47,6 +49,15 @@ class KMeansQueryEngine(WordEmbeddingQueryEngine):
 
     @classmethod
     def initialize_clusters(cls):
+        try:
+            f = open('./dataset/preprocessed/clustering.pkl', 'rb')
+            cls.clusters = pickle.load(f)
+        except FileNotFoundError:
+            cls.compute_clusters()
+            cls.save_clusters()
+
+    @classmethod
+    def compute_clusters(cls):
         optimal_clusters = None
         min_rss = None
 
@@ -164,6 +175,11 @@ class KMeansQueryEngine(WordEmbeddingQueryEngine):
         for cluster in clusters:
             rss += cluster.rss
         return rss
+
+    @classmethod
+    def save_clusters(cls):
+        with open('./dataset/preprocessed/clustering.pkl', 'wb') as f:
+            pickle.dump(cls.clusters, f)
 
     def get_similarities(self):
         k = 5
