@@ -3,7 +3,7 @@ from gensim.models import Word2Vec
 from typing import List, Tuple
 from positional_indexing import TokenInfo
 from math import log10
-
+import numpy as np
 from utils import similarity
 
 from query_processing_base import BaseQueryEngine
@@ -78,6 +78,9 @@ class WordEmbeddingQueryEngine(BaseQueryEngine):
 
             weights.append(weight)
             token_vectors.append(token_vector)
+
+        if len(weights) == 0:
+            return np.zeros_like(cls.w2v_model.wv.get_vector('سلام'))
 
         return sum(token_vectors) / sum(weights)
 

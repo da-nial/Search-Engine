@@ -13,7 +13,7 @@ PREPROCESSED_PATH = DIRECTORY_PATH + 'preprocessed/'
 
 
 def get_preprocessed_df(file_name):
-    preprocessed_file_path = PREPROCESSED_PATH + file_name
+    preprocessed_file_path = PREPROCESSED_PATH + file_name + '.pkl'
 
     try:
         df = pd.read_pickle(preprocessed_file_path)
@@ -23,13 +23,13 @@ def get_preprocessed_df(file_name):
     return df
 
 
-def get_df(file_name, ):
-    file_path = DIRECTORY_PATH + file_name
-    preprocessed_file_path = PREPROCESSED_PATH + file_name
+def get_df(file_name):
+    file_path = DIRECTORY_PATH + file_name + '.xlsx'
+    preprocessed_file_path = PREPROCESSED_PATH + file_name + '.pkl'
 
     is_preprocessed = False
     try:
-        df = get_preprocessed_df("IR1_7k_news.pkl")
+        df = get_preprocessed_df(file_name)
         logger.info(f'Used preprocessed version found in {preprocessed_file_path}')
         is_preprocessed = True
         return df, is_preprocessed

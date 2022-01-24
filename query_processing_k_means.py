@@ -31,9 +31,9 @@ class Cluster:
         )
 
 
-class KMeansEngineWordEmbedding(WordEmbeddingQueryEngine):
-    num_clusters = 10  # K (num seeds)
-    max_iterations = 500
+class KMeansQueryEngine(WordEmbeddingQueryEngine):
+    num_clusters = 20  # K (num seeds)
+    max_iterations = 200
     min_cluster_changed_ratio = 0.01
     epochs = 5  # Number of tries for finding the optimal clustering (based on rss)
 
@@ -42,7 +42,7 @@ class KMeansEngineWordEmbedding(WordEmbeddingQueryEngine):
 
     @classmethod
     def initialize(cls, df, preprocessor, tokens_info):
-        super(KMeansEngineWordEmbedding, cls).initialize(df, preprocessor, tokens_info)
+        super(KMeansQueryEngine, cls).initialize(df, preprocessor, tokens_info)
         cls.initialize_clusters()
 
     @classmethod

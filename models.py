@@ -31,9 +31,13 @@ class TokenInfo:
     def get_frequency(self, doc_id: int):
         return len(self.doc_to_indexes.get(doc_id, []))
 
-    def get_weight(self, doc_id: int, num_docs: int):
+    def tf(self, doc_id):
         f = self.get_frequency(doc_id)
         tf = log10(1 + f)
+        return tf
+
+    def get_weight(self, doc_id: int, num_docs: int):
+        tf = self.tf(doc_id)
         idf = log10(num_docs / self.num_docs_containing)
 
         return tf * idf
