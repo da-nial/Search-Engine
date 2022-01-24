@@ -79,7 +79,7 @@ class WordEmbeddingQueryEngine(BaseQueryEngine):
             weights.append(weight)
             token_vectors.append(token_vector)
 
-        if len(weights) == 0:
+        if sum(weights) == 0:
             return np.zeros_like(cls.w2v_model.wv.get_vector('سلام'))
 
         return sum(token_vectors) / sum(weights)
@@ -133,5 +133,5 @@ class WordEmbeddingQueryEngine(BaseQueryEngine):
         print('Docs found (ranked):\n')
         for doc, similarity in results:
             title = self.df.iloc[doc]['title'].strip('\n')
-            print(f"Doc#{doc} Title: {title[:80]}...  Similarity: {similarity}")
+            print(f"Doc#{doc} Title: {title[:50]}...  Similarity: {similarity}")
         print('\n')

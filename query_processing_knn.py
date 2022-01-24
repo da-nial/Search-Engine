@@ -68,11 +68,12 @@ class KNNClassifier(KNN):
         self.unlabeled_df.insert(2, 'topic', '')
 
         self.compute_unlabeled_docs_vectors()
-        for doc in self.unlabeled_docs:
+        for doc_id, doc in enumerate(self.unlabeled_docs):
             doc.cat = self.classify_doc_vec(doc.vec)
             self.unlabeled_df.at[doc.id, 'topic'] = doc.cat
 
-            print(f'unlabeled_doc_id: {doc.id}: {doc.cat}')
+            if doc_id % 500 == 0:
+                print(f'#Docs Labeled: {doc_id} ({doc_id * 100 / self.num_unlabeled_docs}%)')
 
         return self.unlabeled_df
 

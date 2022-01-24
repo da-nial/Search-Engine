@@ -14,7 +14,7 @@ import pandas as pd
 
 
 def main():
-    file_name = 'IR3_7k_news'
+    file_name = 'IR3_50k_news'
 
     df, is_preprocessed = get_df(file_name)
     preprocessor = Preprocessor(df)
@@ -66,12 +66,11 @@ def classify_docs():
 
     # ----------------------------------------------------
 
-    unlabeled_df, is_preprocessed = pd.read_pickle('./dataset/IR1_100_news.pkl'), False
-    file_name = "IR1_100_news"
+    # unlabeled_df, is_preprocessed = pd.read_pickle('./dataset/IR1_100_news.pkl'), False
+    # file_name = "IR1_100_news"
 
-    # file_name = "IR1_7k_news"
-
-    # unlabeled_df, is_preprocessed = get_df(file_name)
+    file_name = "IR1_7k_news"
+    unlabeled_df, is_preprocessed = get_df(file_name)
     preprocessor = Preprocessor(unlabeled_df)
 
     if not is_preprocessed:
@@ -80,7 +79,7 @@ def classify_docs():
         # Cache
         file_name = file_name + '.pkl'
         preprocessed_file_path = PREPROCESSED_PATH + file_name
-        labeled_df.to_pickle(preprocessed_file_path)
+        unlabeled_df.to_pickle(preprocessed_file_path)
 
     unlabeled_df_tokens_info = get_tokens_info(file_name=file_name + '_pos_idx' + ".pkl",
                                                df=unlabeled_df)

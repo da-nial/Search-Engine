@@ -1,6 +1,6 @@
 from query_processing_word_embedding import WordEmbeddingQueryEngine, Doc
 from utils import l2_norm, mean, similarity
-from random import sample
+from random import sample, randint
 from typing import List, Tuple, Union
 
 import pickle
@@ -21,8 +21,13 @@ class Cluster:
     def empty(self):
         self.docs = []
 
-    def get_centroid(self):
+    def compute_centroid(self):
         doc_vectors = [doc.vec for doc in self.docs]
+
+        if len(doc_vectors) == 0:
+            print("Cluster without any documents!")
+            return None
+
         new_centroid = mean(doc_vectors)
         return new_centroid
 
@@ -34,8 +39,8 @@ class Cluster:
 
 
 class KMeansQueryEngine(WordEmbeddingQueryEngine):
-    num_clusters = 20  # K (num seeds)
-    max_iterations = 200
+    num_clusters = 15  # K (num seeds)
+    max_iterations = 50
     min_cluster_changed_ratio = 0.01
     epochs = 5  # Number of tries for finding the optimal clustering (based on rss)
 
@@ -62,6 +67,7 @@ class KMeansQueryEngine(WordEmbeddingQueryEngine):
         min_rss = None
 
         for i in range(cls.epochs):
+            print(f"Epoch #{i}")
             clusters = cls.k_means()
             rss = cls.rss(clusters)
 
@@ -93,7 +99,12 @@ class KMeansQueryEngine(WordEmbeddingQueryEngine):
                     num_docs_with_changed_cluster += 1
 
             for cluster_id, cluster in enumerate(clusters):
-                new_centroid = cls.get_cluster_new_centroid(cluster)
+                new_centroid = cluster.compute_centroid()
+
+                if new_centroid is None:  # Why would a cluster be empty after the assignments?
+                    random_doc_id = randint(0, cls.num_docs)
+                    new_centroid = cls.docs[random_doc_id].vec
+
                 cluster.centroid = new_centroid
 
             clusters_changed_ratio = num_docs_with_changed_cluster / cls.num_docs
@@ -101,6 +112,9 @@ class KMeansQueryEngine(WordEmbeddingQueryEngine):
                     iteration > cls.max_iterations or
                     clusters_changed_ratio < cls.min_cluster_changed_ratio
             )
+
+            if iteration % 10 == 0:
+                print(f"\tIteration #{iteration}")
 
         return clusters
 
@@ -162,12 +176,6 @@ class KMeansQueryEngine(WordEmbeddingQueryEngine):
         n_nearest_cluster_ids = [cluster_id for cluster_id, _similarity in cluster_id_similarities[:n]]
 
         return n_nearest_cluster_ids
-
-    @classmethod
-    def get_cluster_new_centroid(cls, cluster: Cluster):
-        doc_vectors = [doc.vec for doc in cluster.docs]
-        new_centroid = mean(doc_vectors)
-        return new_centroid
 
     @staticmethod
     def rss(clusters: List[Cluster]):
