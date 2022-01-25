@@ -33,8 +33,8 @@ def main():
     # engine_cls = IndexedQueryEngine
     # engine_cls = VectorizedQueryEngine
     # engine_cls = WordEmbeddingQueryEngine
-    engine_cls = KMeansQueryEngine
-    # engine_cls = KNNQueryEngine
+    # engine_cls = KMeansQueryEngine
+    engine_cls = KNNQueryEngine
 
     engine_cls.initialize(df=df, preprocessor=preprocessor, tokens_info=tokens_info)
 
@@ -97,5 +97,5 @@ def classify_docs():
 
 
 if __name__ == '__main__':
-    # main()
-    classify_docs()
+    main()
+    # classify_docs()

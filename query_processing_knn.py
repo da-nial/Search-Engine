@@ -29,10 +29,11 @@ class KNN(WordEmbeddingQueryEngine):
     k = 15
     cat_to_doc: Dict[str, List[int]] = {}  # Maintain an inverted index from category to list of documents of that cat
 
-    unlabeled_df = None
-    unlabeled_df_tokens_info: Dict[str, TokenInfo] = None
-    num_unlabeled_docs = None
-    unlabeled_docs = List[Doc]
+    @classmethod
+    def initialize(cls, df, preprocessor, tokens_info):
+        super(KNN, cls).initialize(df, preprocessor, tokens_info)
+        cls.initialize_cat_to_doc_index()
+        print('KNN initialization finished!')
 
     @classmethod
     def initialize_doc_vectors(cls):
@@ -43,20 +44,15 @@ class KNN(WordEmbeddingQueryEngine):
             cls.docs.append(
                 Doc(doc_id, doc_vector, doc_cat)
             )
-        print('KNN initialization finished!')
 
     @classmethod
     def initialize_cat_to_doc_index(cls):
-        cls.docs = []
         for doc in cls.docs:
             cat = doc.cat
-            cls.cat_to_doc[cat] = cls.cat_to_doc.get(cat, []).append(doc.id)
+            cls.cat_to_doc[cat] = cls.cat_to_doc.get(cat, []) + [doc.id]
 
 
 class KNNClassifier(KNN):
-    k = 15
-    cat_to_doc: Dict[str, List[int]] = {}  # Maintain an inverted index from category to list of documents of that cat
-
     def __init__(self, unlabeled_df, unlabeled_df_tokens_info):
         super().__init__(query='')
         self.unlabeled_df = unlabeled_df
@@ -141,9 +137,19 @@ class KNNClassifier(KNN):
 
 
 class KNNQueryEngine(KNN):
-    def __init__(self, query, cat=None):
+    def __init__(self, query: str):
+        cat = None
+        if query.startswith('cat'):
+            query_tokens = query.split()
+            _, cat = query_tokens[0].split(':')
+            query = ' '.join(query_tokens[1:])
+
         super().__init__(query)
         self.cat = cat
+
+        # print(f'cat: {cat}')
+        # print(f'query: {query}')
+        # print(self.cat_to_doc.keys())
 
     def get_similarities(self):
         k = 5
@@ -152,7 +158,8 @@ class KNNQueryEngine(KNN):
 
         target_docs = self.docs
         if self.cat is not None:
-            docs_with_same_cat = self.cat_to_doc.get(self.cat, [])
+            doc_ids_with_same_cat = self.cat_to_doc.get(self.cat, [])
+            docs_with_same_cat = [self.docs[doc_id] for doc_id in doc_ids_with_same_cat]
             target_docs = docs_with_same_cat
 
         similarities = []
