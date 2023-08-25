@@ -8,7 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-DIRECTORY_PATH = './dataset/'
+DIRECTORY_PATH = '../datasets/'
 PREPROCESSED_PATH = DIRECTORY_PATH + 'preprocessed/'
 
 

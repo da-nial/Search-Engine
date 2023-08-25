@@ -44,10 +44,10 @@ class WordEmbeddingQueryEngine(BaseQueryEngine):
         # print(f'Built vocab from training data')
         #
         # w2v_model.train(training_data, total_examples=w2v_model.corpus_count, epochs=20)
-        # w2v_model.save('./dataset/w2v/w2v_300d.model')
+        # w2v_model.save('../embeddings/w2v/w2v_300d.model')
 
-        w2v_model = Word2Vec.load('./dataset/w2v/w2v_150k_hazm_300_v2.model')
-        # w2v_model.wv.load('./dataset/w2v/w2v_150k_hazm_300_v2.model.wv.vectors.npy')
+        w2v_model = Word2Vec.load('../embeddings/w2v/w2v_150k_hazm_300_v2.model')
+        # w2v_model.wv.load('../embeddings/w2v/w2v_150k_hazm_300_v2.model.wv.vectors.npy')
 
         cls.w2v_model = w2v_model
 

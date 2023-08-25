@@ -55,7 +55,7 @@ class KMeansQueryEngine(WordEmbeddingQueryEngine):
     @classmethod
     def initialize_clusters(cls):
         try:
-            f = open('./dataset/preprocessed/clustering.pkl', 'rb')
+            f = open('../datasets/preprocessed/clustering.pkl', 'rb')
             cls.clusters = pickle.load(f)
         except FileNotFoundError:
             cls.compute_clusters()
@@ -186,7 +186,7 @@ class KMeansQueryEngine(WordEmbeddingQueryEngine):
 
     @classmethod
     def save_clusters(cls):
-        with open('./dataset/preprocessed/clustering.pkl', 'wb') as f:
+        with open('../datasets/preprocessed/clustering.pkl', 'wb') as f:
             pickle.dump(cls.clusters, f)
 
     def get_similarities(self):

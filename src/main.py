@@ -14,7 +14,7 @@ import pandas as pd
 
 
 def main():
-    file_name = 'IR3_50k_news'
+    file_name = 'IR1_7k_news'
 
     df, is_preprocessed = get_df(file_name)
     preprocessor = Preprocessor(df)
@@ -31,10 +31,10 @@ def main():
     print(df.head())
 
     # engine_cls = IndexedQueryEngine
-    # engine_cls = VectorizedQueryEngine
+    engine_cls = VectorizedQueryEngine
     # engine_cls = WordEmbeddingQueryEngine
     # engine_cls = KMeansQueryEngine
-    engine_cls = KNNQueryEngine
+    # engine_cls = KNNQueryEngine
 
     engine_cls.initialize(df=df, preprocessor=preprocessor, tokens_info=tokens_info)
 

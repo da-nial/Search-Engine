@@ -1,8 +1,9 @@
 venv
 __pycache__/
-dataset
+datasets/
+embeddings/
 .idea
-single_file.py
-Archive.zip
+src/single_file.py
+*.zip
 API.ipynb
 .ipynb_checkpoints
