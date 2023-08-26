@@ -6,7 +6,7 @@ indexing, TF-IDF vectorizing, and Word2Vec embedding. The search speed is booste
 elimination, champions list, and clustering. The engine classifies documents with KNN into multiple categories based on
 their topic.
 
-The engine is tested on the Iranian Student News Agency archive news dataset. Detailed project descriptions and reports
+The engine is tested on the Iranian Student News Agency (ISNA) archived news dataset. Detailed project descriptions and reports
 can be found in the `docs/instructions.pdf` and `docs/report.pdf` files, which are in Persian.
 
 ## Project Description
@@ -24,12 +24,11 @@ vector of the input query are found using the following two strategies:
 - **Statistical Approach (TF-IDF):** Each document is represented by a vector containing the weights for all of its
   words. The weight of each word is measured by the tf-idf measure. Words not present in the document are weighed 0.
   The tf-idf measure is calculated as follows
-  ```
-  \[\text{tfidf}(t,d,D)=\text{tf}(t,d) \times \text{idf}(t,D)=(1+\log(f))\times \log(N)\]
-  ```
 
-  where \(f_{t,d}\) is the number of occurrences of the term \(t\) in the document \(d\), and \(N_t\) is the number of
-  documents containing the term \(t\).
+$$\text{tfidf}(t, d, D) = \text{tf}(t, d) \times \text{idf}(t, D) = (1 + \log(f_{t,d})) \times \log(N/n_t)$$
+
+  where $f_{t,d}$ is the number of occurrences of the term $t$ in the document $d$, and $n_t$ is the number of
+  documents containing the term $t$.
 
 - **Embedding Approach (Word2Vec):** Using the `gensim` library and the `word2vec` model, the vector representation of
   the documents is calculated. Each word in this vector is represented by a 300-dimensional vector. The document vector
@@ -43,11 +42,9 @@ Two techniques are implemented for faster retrieval:
   champions list. This way, when a query comes, its vector is only compared with document vectors of the documents in
   the champions list of query words.
 
-The vectors similarity is calculated using the cosine similarity.
+The similarity between vectors is calculated using the cosine similarity.
 
-```
-\[ \text{Cosine Similarity} = \frac{A . B}{||A|| ||B||} \]
-```
+$$\text{cosine similarity}(A, B) = \frac{A \cdot B}{\lVert A \rVert \lVert B \rVert}$$
 
 where A and B are the document and query vectors respectively.
 
@@ -70,7 +67,7 @@ The project consists of the following files:
 - `engines`: A base class called `BaseQueryEngine` is defined which defines the interface for all retrieval methods, and
   has some common variables such as the preprocessed data and the indexes. Out of this base class, different engines,
   such as `IndexedQueryEngine` (phase 1), `VectorizedQueryEngine` and `WordEmbeddingQueryEngine` (phase 2)
-  and `KMeansQueryEngine` `KNNQueryEngine` (phase 3) are created.
+  and `KMeansQueryEngine` and `KNNQueryEngine` (phase 3) are created.
 
 ## Evaluation
 
