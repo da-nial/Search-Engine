@@ -1,6 +1,6 @@
 # Search Engine
 
-This project is an information retrieval search engine developed for an Information Retrieval course. Its workflow
+This project is an information retrieval search engine developed for my Information Retrieval undergraduate course. Its workflow
 consists of preprocessing the data and then answering the queries using various approaches including positional
 indexing, TF-IDF vectorizing, and Word2Vec embedding. The search speed is boosted using techniques such as index
 elimination, champions list, and clustering. The engine classifies documents with KNN into multiple categories based on
@@ -13,8 +13,7 @@ can be found in the `docs/instructions.pdf` and `docs/report.pdf` files, which a
 
 ### Phase 1: Preprocessing and Indexing
 
-The first phase includes preprocessing steps such as normalization, tokenization, stemming, and stopwords removal. A
-positional indexing of the words is then created and cached. Boolean search is implemented in this phase.
+The first phase includes preprocessing steps such as normalization, tokenization, stemming, and stopwords removal. [Hazm](https://github.com/roshan-research/hazm), An NLP library designed for Persian text, is used for preprocessing. A positional indexing of the words is then created and cached. Boolean search is implemented in this phase.
 
 ### Phase 2: Search in Vector Space
 
